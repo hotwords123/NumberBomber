@@ -12,7 +12,7 @@ function SearchResult(val, pos) {
 	this.pos = pos;
 }
 
-function AI(color, max_time) {
+function AI_v3(color, max_time) {
 	this.color = color;
 	this.max_time = max_time;
 	this.values = {};
@@ -28,7 +28,7 @@ function AI(color, max_time) {
 	];
 }
 
-AI.prototype.checkWin = function(grid, color) {
+AI_v3.prototype.checkWin = function(grid, color) {
 	let res = true;
 	grid.enumTilesEx(function(tile) {
 		if (tile.color !== color) {
@@ -40,11 +40,11 @@ AI.prototype.checkWin = function(grid, color) {
 	return res;
 };
 
-AI.prototype.calculate = function(obj, x) {
+AI_v3.prototype.calculate = function(obj, x) {
 	return obj.a * Math.pow(x, obj.b);
 };
 
-AI.prototype.evaluateFor = function(grid, me) {
+AI_v3.prototype.evaluateFor = function(grid, me) {
 	let tile_cnt = grid.getTileCount(me);
 	if (tile_cnt === 0) return this.values.lose;
 	if (tile_cnt === grid.size * grid.size) return this.values.win;
@@ -54,11 +54,11 @@ AI.prototype.evaluateFor = function(grid, me) {
 	return result;
 };
 
-AI.prototype.evaluate = function(grid) {
+AI_v3.prototype.evaluate = function(grid) {
 	return this.evaluateFor(grid, this.color) /*- this.evaluateFor(grid, this.color ^ 1)*/;
 };
 
-AI.prototype.simulate = function(grid, r, c) {
+AI_v3.prototype.simulate = function(grid, r, c) {
 
 	const vectors = [[0, 1], [0, -1], [1, 0], [-1, 0]];
 	let res = Grid.from(grid);
@@ -92,7 +92,7 @@ AI.prototype.simulate = function(grid, r, c) {
 	return res;
 };
 
-AI.prototype.getSearchPriority = function(grid, r, c, me) {
+AI_v3.prototype.getSearchPriority = function(grid, r, c, me) {
 	let tmp = 0, t = grid.getLimit(r, c);
 	if (t === 2) tmp += 6;
 	if (t === 3) tmp += 2;
@@ -106,9 +106,11 @@ AI.prototype.getSearchPriority = function(grid, r, c, me) {
 		}
 	});
 	return tmp;
-};var cut0=0,cut1=0,cut2=0,cut3=0;
+};
 
-AI.prototype.search = function(grid, turn, depth, alpha, beta) {
+var cut0 = 0, cut1 = 0, cut2 = 0, cut3 = 0;
+
+AI_v3.prototype.search = function(grid, turn, depth, alpha, beta) {
 
 	let self = this;
 	let result = null, temp, grid_new;
@@ -218,7 +220,7 @@ AI.prototype.search = function(grid, turn, depth, alpha, beta) {
 	return result;
 };
 
-AI.prototype.init_heat = function(state, size) {
+AI_v3.prototype.init_heat = function(state, size) {
 	let total;
 	this.current_step = state.step;
 	total = size * size;
@@ -229,7 +231,7 @@ AI.prototype.init_heat = function(state, size) {
 	else this.heat_state = 4;
 };
 
-AI.prototype.think = function(grid, state) {
+AI_v3.prototype.think = function(grid, state) {
 	let result = null, depth = 2, start_time = Date.now();
 	this.init_heat(state, grid.size);
 	do {

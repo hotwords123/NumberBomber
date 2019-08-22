@@ -1,55 +1,6 @@
 
 'use strict';
 
-function deepClone(pt, o) {
-	return Object.assign(Object.create(pt), cloneObject(o));
-}
-
-function cloneObject(o) {
-	if (typeof o !== 'object') return o;
-	let r;
-	if (o instanceof Array) {
-		r = [];
-		for (let i = 0; i < o.length; ++i) {
-			r.push(cloneObject(o[i]));
-		}
-		return r;
-	}
-	r = {};
-	for (let i in o) {
-		if (o.hasOwnProperty(i)) {
-			r[i] = cloneObject(o[i]);
-		}
-	}
-	return r;
-}
-
-function State(grid) {
-	this.step = 0;
-	this.current_player = 0;
-	this.ended = false;
-	this.load(grid);
-}
-
-State.prototype.load = function(grid) {
-	this.tiles_red = grid.getTileCount(0);
-	this.tiles_blue = grid.getTileCount(1);
-};
-
-State.prototype.toggle = function() {
-	this.step ++;
-	this.current_player ^= 1;
-};
-
-State.prototype.end = function() {
-	this.step ++;
-	this.ended = true;
-}
-
-State.from = function(obj) {
-	return deepClone(State.prototype, obj);
-};
-
 function GameManager(UIManager, Renderer, LocalStorageManager, reacters) {
 	let self = this;
 	this.colors = ['red', 'blue'];

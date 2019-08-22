@@ -173,3 +173,7 @@ AI.prototype.think = function(grid, state) {
 return AI;
 
 })();
+
+if (typeof self !== 'undefined') {
+	self.AI_v1 = AI_v1;
+}
